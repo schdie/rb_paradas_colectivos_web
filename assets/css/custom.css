@@ -1,0 +1,21 @@
+/* we only care about the map */
+#map { height: 98vh; }
+
+@-ms-viewport {
+	width: device-width;
+}
+
+body {
+	-ms-overflow-style: scrollbar;
+}
+
+@media screen and (max-width: 480px) {
+
+	html, body {
+		min-width: 320px;
+	}
+
+}
+
+/* quick fixes */
+.leaflet-shadow-pane  { display: none !important; }
