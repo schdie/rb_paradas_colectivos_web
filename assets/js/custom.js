@@ -144,12 +144,18 @@ var busIcon = L.icon({
 //console.log("nobj: ", nobj.nodos);
 
 // global scope
-var layerParadas = L.layerGroup().addTo(map);
+var layerParadas = L.layerGroup().addTo(map); // rb json with bus stops
+var layerPath = L.layerGroup().addTo(map); // layer for polyline the stops
+var polyline;
+const items = []; // array used for the polyline
+
 
 // get the selected bus stops
 function paradas () {
 	// remove all the markers in one go
 	layerParadas.clearLayers();
+	// also remove the path
+	layerPath.clearLayers();
 	// show the layergroup choosen
 	for (var key in Object.values(objParadas.nodos)) {
 		// valores default de los json de redbus	
@@ -164,8 +170,16 @@ function paradas () {
 			let latLng = L.latLng([Object.values(objParadas.nodos[key])[0], Object.values(objParadas.nodos[key])[1]]);
 			L.marker(latLng, {icon: paradaIcon}).addTo(layerParadas).bindPopup("Parada: " + Object.values(objParadas.nodos[key])[4]);
 			
+			// can't use strings, need numbers
+			let lattemp = parseFloat(Object.values(objParadas.nodos[key])[0]);
+			let lngtemp = parseFloat(Object.values(objParadas.nodos[key])[1]);
+			items.push([lattemp, lngtemp]);
 		}
 	}
+	// add the polyline to the its own layer on the map
+	polyline = L.polyline(items, {color: 'red'}).addTo(layerPath);
+	// clean the array
+	items.length = 0
 }
 
 // try to get the current buses positions
