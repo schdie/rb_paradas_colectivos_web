@@ -7,4 +7,4 @@ Para información más detallada visitar este [link](https://github.com/schdie/r
 
 Notas:  
 Para evitar errores con CORS usar un servidor acorde y/o reverse proxy, etc.  
-Falta hacer el svg path de los recorridos.
+Se usó un polyline para unir las paradas, esto es temporal hasta hacerlo como corresponde usando un sistema de wavepoints.
