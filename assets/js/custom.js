@@ -106,8 +106,8 @@ selectElement.addEventListener("click", function(event){
 			lastclicked = clickedOption;
 			// call overlay
 			poverlay(clickedOption);
-			// -------------- TODO call buses' locations
-			//busLocation(clickedOption);
+			// call buses' locations
+			buslocation(clickedOption);
 		}
 	}
 });
@@ -169,16 +169,26 @@ function paradas () {
 }
 
 // try to get the current buses positions
-// a server with CORS support is needed for this to work
-//function busLocation(clickedOption) {
-//	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, { 
-//		method: 'GET',
-//		mode: 'cors'
-//	})
-//	.then(function(response) { return response.json(); })
-//	.then(function(json) {
-//		// already parsed, no need for JSON.parse(json)
-//		objBusLoc = json;
-//		console.log("bus location fetch json: ", objBusLoc);
-//	});
-//}
+// a local server with CORS support is needed for this to work
+function buslocation(clickedOption) {
+	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, { 
+		method: 'GET',
+		mode: 'cors'
+	})
+	.then(function(response) { return response.json(); })
+	.then(function(json) {
+		// already parsed, no need for JSON.parse(json)
+		objBusLoc = json;
+		
+		for (var key in Object.values(objBusLoc.posiciones)) {
+			//console.log("Interno: " + Object.values(objBusLoc.posiciones[key])[0]);
+			//console.log("Latitud: " + Object.values(objBusLoc.posiciones[key])[1]);
+			//console.log("Longitud: " + Object.values(objBusLoc.posiciones[key])[2]);
+			//console.log("Orientacion: " + Object.values(objBusLoc.posiciones[key])[3]);
+			//console.log("Proxima Parada: " + Object.values(objBusLoc.posiciones[key])[4]);
+			
+			let latLng = L.latLng([Object.values(objBusLoc.posiciones[key])[1], Object.values(objBusLoc.posiciones[key])[2]]);
+			L.marker(latLng, {icon: busIcon, zIndexOffset: 9999}).addTo(layerParadas).bindPopup("Interno: " + Object.values(objBusLoc.posiciones[key])[0] + "<br> Próxima parada: " + Object.values(objParadas.nodos[key])[4]);
+		}
+	});
+}
