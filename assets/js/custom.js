@@ -164,13 +164,8 @@ function paradas () {
 			let latLng = L.latLng([Object.values(objParadas.nodos[key])[0], Object.values(objParadas.nodos[key])[1]]);
 			L.marker(latLng, {icon: paradaIcon}).addTo(layerParadas).bindPopup("Parada: " + Object.values(objParadas.nodos[key])[4]);
 			
-			var polyline = L.polyline(latLng,{});
-			polyline.addTo(map);
-			console.log("polyline end: ", polyline);
 		}
 	}
-	console.log("layerParadas end: ", layerParadas);
-
 }
 
 // try to get the current buses positions
