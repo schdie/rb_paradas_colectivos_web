@@ -25,9 +25,9 @@ map.on('locationfound', onLocationFound);
 //const obj = JSON.parse(json);
 
 // global scope
-var selectElement = document.getElementById('sel');
-var obj;
-var objParadas;
+var selectElement = document.getElementById('sel'); // select element on webpage
+var obj; // the json gruposLineas.json
+var objParadas; // to be any /assets/json/X.json
 
 // fetch the gruposLineas.json
 async function fetchgrupoLineas() {
@@ -178,14 +178,13 @@ function paradas () {
 	}
 	// add the polyline to the its own layer on the map
 	polyline = L.polyline(items, {color: 'red'}).addTo(layerPath);
-	// clean the array
-	items.length = 0
+	// clear the array
+	items.length = 0;
 }
 
-// try to get the current buses positions
-// a local server with CORS support is needed for this to work
+// try to get the current position of the buses
 function buslocation(clickedOption) {
-	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, { 
+	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		mode: 'cors'
 	})
@@ -194,6 +193,7 @@ function buslocation(clickedOption) {
 		// already parsed, no need for JSON.parse(json)
 		objBusLoc = json;
 		
+		// I should probably create a function with this to update the locations every ~10sec
 		for (var key in Object.values(objBusLoc.posiciones)) {
 			//console.log("Interno: " + Object.values(objBusLoc.posiciones[key])[0]);
 			//console.log("Latitud: " + Object.values(objBusLoc.posiciones[key])[1]);
