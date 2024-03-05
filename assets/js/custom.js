@@ -169,13 +169,12 @@ function paradas () {
 		if (Object.values(objParadas.nodos[key])[2] === true) {
 			let latLng = L.latLng([Object.values(objParadas.nodos[key])[0], Object.values(objParadas.nodos[key])[1]]);
 			L.marker(latLng, {icon: paradaIcon}).addTo(layerParadas).bindPopup("Parada: " + Object.values(objParadas.nodos[key])[4]);
-		} else { // if parada is false returns a wavepoint for the bus route
-			// can't use strings, we need numbers
-			let lattemp = parseFloat(Object.values(objParadas.nodos[key])[0]);
-			let lngtemp = parseFloat(Object.values(objParadas.nodos[key])[1]);
-			// send items to array
-			items.push([lattemp, lngtemp]);
 		}
+		// for the bus route it shoudl use all the wavepoints
+		let lattemp = parseFloat(Object.values(objParadas.nodos[key])[0]);
+		let lngtemp = parseFloat(Object.values(objParadas.nodos[key])[1]);
+		// send items to array
+		items.push([lattemp, lngtemp]);
 	}
 	// add the polyline to the its own layer on the map
 	polyline = L.polyline(items, {color: 'red'}).addTo(layerPath);
