@@ -165,14 +165,15 @@ function paradas () {
 		//console.log("codigoParada: " + Object.values(objParadas.nodos[key])[3]);
 		//console.log("descripcionParada: " + Object.values(objParadas.nodos[key])[4]);
 		
-		// only show real bus stops
+		// if parada is true it returns a bus stop
 		if (Object.values(objParadas.nodos[key])[2] === true) {
 			let latLng = L.latLng([Object.values(objParadas.nodos[key])[0], Object.values(objParadas.nodos[key])[1]]);
 			L.marker(latLng, {icon: paradaIcon}).addTo(layerParadas).bindPopup("Parada: " + Object.values(objParadas.nodos[key])[4]);
-			
-			// can't use strings, need numbers
+		} else { // if parada is false returns a wavepoint for the bus route
+			// can't use strings, we need numbers
 			let lattemp = parseFloat(Object.values(objParadas.nodos[key])[0]);
 			let lngtemp = parseFloat(Object.values(objParadas.nodos[key])[1]);
+			// send items to array
 			items.push([lattemp, lngtemp]);
 		}
 	}

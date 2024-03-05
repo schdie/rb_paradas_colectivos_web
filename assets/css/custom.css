@@ -21,6 +21,7 @@ body {
 .leaflet-shadow-pane  { display: none !important; }
 .leaflet-container .leaflet-control-attribution { display: none !important; }
 .leaflet-default-icon-path { background-image: url(../images/marker-icon.png) !important; }
+.leaflet-top { top: unset !important; bottom: 10px !important; }
 
 /* dropdown of bus stops */
 #sel {
