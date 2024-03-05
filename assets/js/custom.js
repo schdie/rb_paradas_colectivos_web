@@ -95,6 +95,7 @@ async function dropdownLineas() {
 
 // global scope
 var lastclicked;
+var busloopId;
 
 // on user selection get the selected value and display the bus stops
 selectElement.addEventListener("click", function(event){
@@ -107,6 +108,7 @@ selectElement.addEventListener("click", function(event){
 			// call overlay
 			poverlay(clickedOption);
 			// call buses' locations
+			clearInterval(busloopId);
 			buslocation(clickedOption);
 		}
 	}
@@ -187,10 +189,16 @@ function paradas () {
 	polyline = L.polyline(items, {color: 'red'}).addTo(layerPath);
 	// clear the array
 	items.length = 0;
+	// fit to current path
+	map.fitBounds(polyline.getBounds());
 }
 
 // try to get the current position of the buses
 function buslocation(clickedOption) {
+	let cbus = clickedOption;
+	console.log("hi! buses locations");
+
+	// retrieve current location
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		mode: 'cors'
@@ -199,7 +207,9 @@ function buslocation(clickedOption) {
 	.then(function(json) {
 		// already parsed, no need for JSON.parse(json)
 		objBusLoc = json;
-		
+
+		// clean the layer before displaying it again
+		layerBuses.clearLayers();
 		// display the location of all the buses
 		for (var key in Object.values(objBusLoc.posiciones)) {
 			//console.log("Interno: " + Object.values(objBusLoc.posiciones[key])[0]);
@@ -214,4 +224,6 @@ function buslocation(clickedOption) {
 			L.marker(latLng, {rotationAngle: Object.values(objBusLoc.posiciones[key])[3], rotationOrigin: "center", icon: directionIcon, zIndexOffset: 9998}).addTo(layerBuses);
 		}
 	});
+//setTimeout(buslocation(cbus), 15000);
+busloopId = setTimeout( () => {buslocation(cbus);}, 15000); // 15 secs is enough, lets be nice
 }
