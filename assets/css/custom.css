@@ -21,12 +21,38 @@ body {
 /*.leaflet-shadow-pane  { display: none !important; }*/
 .leaflet-container .leaflet-control-attribution { display: none !important; }
 .leaflet-default-icon-path { background-image: url(../images/marker-icon.png) !important; }
-.leaflet-top { top: unset !important; bottom: 10px !important; }
+.leaflet-top { top: unset !important; bottom: 50px !important; }
 
-/* dropdown of bus stops */
+/* dropdown of bus stops 
 #sel {
 	display: block;
 	position: relative;
 	margin: 1em auto;
 	z-index: 9999;
 }
+*/
+
+/* select starting stylings ------------------------------*/
+#sel {
+	display: block;
+	position: relative;
+	margin: 1em auto;
+	z-index: 9999;
+	border: none;
+	background-color: white;
+	height: 2.5em;
+	max-width: 20em;
+	
+	border-radius: 4px;
+	transition: all 0.3s ease-out;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	
+	text-overflow: ellipsis;
+	text-indent: 1em;
+}
+
+
+
