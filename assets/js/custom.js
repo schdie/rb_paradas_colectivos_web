@@ -97,7 +97,11 @@ var busloopId;
 
 // on user selection get the selected value and display the bus stops
 selectElement.addEventListener("change", function(event){
+	// value of description from JSON
 	let clickedOption = selectElement.value;
+	// description from selected index
+	let busName = selectElement.options[selectElement.selectedIndex].text;
+	//console.log("selectElement: ", selectElement.options[selectElement.selectedIndex].text);
 	// only look for stops and buses
 	if (clickedOption !== "0") {
 		if (lastclicked !== clickedOption) {
@@ -107,13 +111,12 @@ selectElement.addEventListener("change", function(event){
 			poverlay(clickedOption);
 			// call buses' locations
 			clearInterval(busloopId);
-			buslocation(clickedOption);
+			buslocation(clickedOption, busName);
 		}
 	}
 });
 
 function poverlay(clickedOption) {
-	console.log("clicked option poverlay: ", clickedOption);
 	// fetch the gruposLineas.json
 	fetch('../assets/json/' + clickedOption + '.json', { 
 		method: 'GET'
@@ -122,7 +125,6 @@ function poverlay(clickedOption) {
 	.then(function(json) {
 		// already parsed, no need for JSON.parse(json)
 		objParadas = json;
-		console.log("paradas fetch json: ", objParadas);
 		// call paradas
 		paradas();
 	});
@@ -186,9 +188,8 @@ function paradas () {
 }
 
 // try to get the current position of the buses
-function buslocation(clickedOption) {
+function buslocation(clickedOption, busName) {
 	let cbus = clickedOption;
-	console.log("hi! buses locations");
 
 	// retrieve current location
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
@@ -211,7 +212,7 @@ function buslocation(clickedOption) {
 			//console.log("Proxima Parada: " + Object.values(objBusLoc.posiciones[key])[4]);
 			
 			let latLng = L.latLng([Object.values(objBusLoc.posiciones[key])[1], Object.values(objBusLoc.posiciones[key])[2]]);
-			L.marker(latLng, {icon: busIcon, zIndexOffset: 9999}).addTo(layerBuses).bindPopup("Interno: " + Object.values(objBusLoc.posiciones[key])[0] + "<br> Próxima parada: " + Object.values(objBusLoc.posiciones[key])[4]);
+			L.marker(latLng, {icon: busIcon, zIndexOffset: 9999}).addTo(layerBuses).bindPopup("Colectivo: " + busName + "<br> Interno: " + Object.values(objBusLoc.posiciones[key])[0] + "<br> Próxima parada: " + Object.values(objBusLoc.posiciones[key])[4]);
 			// add bus direction
 			L.marker(latLng, {rotationAngle: Object.values(objBusLoc.posiciones[key])[3], rotationOrigin: "center", icon: directionIcon, zIndexOffset: 9998}).addTo(layerBuses);
 		}
