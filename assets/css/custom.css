@@ -28,8 +28,8 @@ body {
 	position: relative;
 	margin: 1em auto;
 	z-index: 9999;
-	/*border: none; 
-	background-color: white;*/
+	/*border: none;*/
+	background-color: background-color:rgba(192,192,192,0.3);
 	height: 2.5em;
 	max-width: 20em;
 	
@@ -42,13 +42,14 @@ body {
 	
 	text-overflow: ellipsis;
 	text-indent: 1em;
-		
-	background: url(data%3Aimage%2Fsvg%20xml%2C%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!--%20License%3A%20MIT.%20Made%20by%20Shopify%3A%20https%3A%2F%2Fgithub.com%2FShopify%2Fpolaris%20--%3E%3Csvg%20width%3D%22800px%22%20height%3D%22800px%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M10.707%2017.707l5-5a.999.999%200%2010-1.414-1.414L11%2014.586V3a1%201%200%2010-2%200v11.586l-3.293-3.293a.999.999%200%2010-1.414%201.414l5%205a.999.999%200%20001.414%200z%22%20background%3D%22white%22%20fill%3D%22%235C5F62%22%2F%3E%3C%2Fsvg%3E) no-repeat 100% 50%;
+	box-shadow: none;
+	opacity: 0.75;
 }
 
 /* make the zoom also transparent */
 .leaflet-touch .leaflet-bar a {
-	background-color: transparent !important;
+	background-color:rgba(192,192,192,0.3) !important;
+	opacity: 0.75 !important;
 }
 
 
