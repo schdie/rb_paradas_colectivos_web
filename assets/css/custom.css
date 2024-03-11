@@ -41,7 +41,7 @@ body {
 	-moz-appearance: listbox !important;
 	
 	text-overflow: ellipsis;
-	text-indent: 1em;
+	/*text-indent: 1em;*/
 	opacity: 0.75;
 	border-style: solid;
 }
