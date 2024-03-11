@@ -7,7 +7,7 @@ const map = L.map('map').setView([-26.8083, -65.2176], 13);
 	}).addTo(map);
 
 // for automatic detection of location
-map.locate({setView: true, maxZoom: 16});
+map.locate({setView: true, watch: true, maxZoom: 16});
 
 function onLocationFound(e) {
     var radius = e.accuracy;
