@@ -46,11 +46,45 @@ body {
 	border-style: solid;
 }
 
+#chkboxes {
+	display: block;
+	position: absolute;
+	left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+	z-index: 9999;
+	background-color: rgba(192,192,192,0.3);
+	height: 2.5em;
+	width: fit-content;
+  bottom: 0px;
+	
+	border-radius: 4px;
+	transition: all 0.3s ease-out;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-webkit-appearance: listbox !important;
+	-moz-appearance: listbox !important;
+
+	opacity: 0.75;
+}
+
+
 /* make the zoom also transparent */
 .leaflet-touch .leaflet-bar a {
 	background-color:rgba(192,192,192,0.3) !important;
 	opacity: 0.75 !important;
 }
 
-
+[type="checkbox"]
+{
+	border-radius: 4px;
+	transition: all 0.3s ease-out;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-webkit-appearance: listbox !important;
+	-moz-appearance: listbox !important;
+  vertical-align:middle;
+  opacity: 0.75;
+	border-style: solid;
+}
 

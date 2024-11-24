@@ -29,7 +29,7 @@ var objParadas; // to be any /assets/json/X.json
 
 // fetch gruposLineas.json
 async function fetchgrupoLineas() {
-	fetch('../assets/json/gruposLineas.json', { 
+	fetch('assets/json/gruposLineas.json', { 
 		method: 'GET'
 	})
 	.then(function(response) { return response.json(); })
@@ -68,6 +68,7 @@ async function dropdownLineas() {
 			//console.log("urbanos inception: ", Object.values(urbanos[key])[2][yek].codLinea);
 			//console.log("urbanos inception: ", Object.values(urbanos[key])[2][yek].descripcion);
 			sel.appendChild(new Option(Object.values(urbanos[key])[2][yek].descripcion, Object.values(urbanos[key])[2][yek].codLinea)).cloneNode(true);
+			//.toString('utf-8')
 		}
 
 		//console.log("descripcion: " + Object.values(urbanos[key])[1]);
@@ -118,7 +119,7 @@ selectElement.addEventListener("change", function(event){
 
 function poverlay(clickedOption) {
 	// fetch the gruposLineas.json
-	fetch('../assets/json/' + clickedOption + '.json', { 
+	fetch('assets/json/' + clickedOption + '.json', { 
 		method: 'GET'
 	})
 	.then(function(response) { return response.json(); })
@@ -132,15 +133,15 @@ function poverlay(clickedOption) {
 
 // icons
 var paradaIcon = L.icon({
-    iconUrl: '../assets/images/rb_parada.png',
+    iconUrl: 'assets/images/rb_parada.png',
     iconSize:     [25, 25] // size of the icon
 });
 var busIcon = L.icon({
-    iconUrl: '../assets/images/rb_bus.png',
+    iconUrl: 'assets/images/rb_bus.png',
     iconSize:     [25, 25] // size of the icon
 });
 var directionIcon = L.icon({
-    iconUrl: '../assets/images/rb_arrow.png',
+    iconUrl: 'assets/images/rb_arrow.png',
     iconSize:     [24, 75] // size of the icon
 });
 
