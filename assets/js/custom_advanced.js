@@ -38,7 +38,7 @@ async function fetchgrupoLineas() {
 	const response = await fetch('assets/json/gruposLineas.json', { 
 		method: 'GET',
 		header: {
-			'Allow-Access-Control-Origin': '*',
+			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'GET, PUT, POST',
 			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
 			'Accept': 'application/json',
@@ -299,7 +299,7 @@ function buslocation(clickedOption, busName) {
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
-			'Allow-Access-Control-Origin': '*',
+			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'GET, PUT, POST',
 			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
 			'Accept': 'application/json',
