@@ -163,21 +163,24 @@ var directionIcon = L.icon({
 //console.log("nobj: ", nobj.nodos);
 
 // global scope
-var layerParadas = L.layerGroup().addTo(map); // rb json with bus stops
-var layerPath = L.layerGroup().addTo(map); // layer for polyline the stops
-var layerBuses = L.layerGroup().addTo(map); // layer for polyline the stops
+var layerParadas = L.layerGroup().addTo(map); // polyline layer for the bus stops
+var layerPath = L.layerGroup().addTo(map); // polyline layer for the indidual routes
+var layerBuses = L.layerGroup().addTo(map); // polyline layer for the buses
+var layerAllRoutes = L.featureGroup();
 var polyline;
 const items = []; // array used for the polyline
 
 // get the selected bus stops
 function paradas () {
 	if (checkboxLimp.checked === true) { // only if the checkbox is selected
-		// remove all the 'paradas' markers
+		// clear all the 'paradas' markers
 		layerParadas.clearLayers();
-		// remove the current bus path
+		// clear the current bus path
 		layerPath.clearLayers();
-		// remove buses locations
+		// clear buses locations
 		layerBuses.clearLayers();
+		// remove layerAllRoutes
+		layerAllRoutes.remove();
 	}
 	
 	// show the layergroup choosen
@@ -205,7 +208,7 @@ function paradas () {
 	polyline = L.polyline(items, {color: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
 																weight: 7,
 																opacity: 1,
-																smoothFactor: 1}).addTo(layerPath);
+																smoothFactor: 1}).bindPopup(selectElement.options[selectElement.selectedIndex].text).addTo(layerPath);
 	// clear the array
 	items.length = 0;
 	// fit to current path
@@ -216,6 +219,8 @@ function paradas () {
 function retrieveAllRoutes () {
 	let r = 0;
 	let z = 0;
+	// remove all the 'paradas' markers
+	//layerParadas.clearLayers();
 	for (let i = 1; i < selectElement.length; i++) { 	
 		// our index is our guide
 		selectElement.selectedIndex = i;
@@ -228,8 +233,7 @@ function retrieveAllRoutes () {
 			// already parsed, no need for JSON.parse(json)
 			objParadas = json;
 			//console.log("retrieveAllRoutes: ", objParadas);
-			// remove all the 'paradas' markers
-			layerParadas.clearLayers();
+			
 			// show the layergroup choosen
 			for (var key in Object.values(objParadas.nodos)) {
 				// for the bus route it should use all the wavepoints
@@ -255,13 +259,14 @@ function retrieveAllRoutes () {
 			polyline = L.polyline(items, {color: linecolor,
 																		weight: 5,
 																		opacity: 0.7,
-																		smoothFactor: 1}).addTo(layerPath);
+																		smoothFactor: 1}).bindPopup(selectElement.options[i].text).addTo(layerAllRoutes);	
 			// clear the array
 			items.length = 0;
 			// fit to current path
 			map.fitBounds(polyline.getBounds());
 		});
-	}	
+	}
+	layerAllRoutes.addTo(map);
 }
 
 // show all routes at the same time
@@ -271,16 +276,22 @@ checkboxRutas.addEventListener("click", function(event){
 		layerParadas.clearLayers();
 		layerPath.clearLayers();
 		layerBuses.clearLayers();
-		// call our function
-		retrieveAllRoutes();
+		layerAllRoutes.remove();
+		// call our function if we didn't already
+		if (layerAllRoutes.getLayers().length === 0) {
+			retrieveAllRoutes();
+		} else {
+			layerAllRoutes.addTo(map);
+		}
+		//retrieveAllRoutes();
 	} else {
 		// cleanup
 		layerParadas.clearLayers();
 		layerPath.clearLayers();
 		layerBuses.clearLayers();
+		layerAllRoutes.remove();
 	}
 });
-
 
 // try to get the current position of the buses
 function buslocation(clickedOption, busName) {
@@ -296,7 +307,7 @@ function buslocation(clickedOption, busName) {
 	console.log("hi! buses locations");
 
 	// retrieve current location
-	fetch('http://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
+	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
 			'Access-Control-Allow-Origin': '*',
@@ -305,7 +316,7 @@ function buslocation(clickedOption, busName) {
 			'Accept': 'application/json',
 			'Content-type': 'application/json',
 		},
-		mode: 'no-cors'
+		mode: 'cors'
 	})
 	.then(function(response) { return response.json(); })
 	.then(function(json) {
