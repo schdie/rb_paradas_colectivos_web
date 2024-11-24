@@ -296,7 +296,7 @@ function buslocation(clickedOption, busName) {
 	console.log("hi! buses locations");
 
 	// retrieve current location
-	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
+	fetch('http://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
 			'Access-Control-Allow-Origin': '*',
