@@ -38,7 +38,7 @@ async function fetchgrupoLineas() {
 	const response = await fetch('assets/json/gruposLineas.json', { 
 		method: 'GET',
 		header: {
-			'Origin': 'https://rbt.0x2f.dev',
+			'Origin': 'https://tucuman.miredbus.com.ar',
 			'Accept': 'application/json',
 		},
 		mode: 'cors'
@@ -316,7 +316,7 @@ function buslocation(clickedOption, busName) {
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
-			'Origin': 'https://rbt.0x2f.dev',
+			'Origin': 'https://tucuman.miredbus.com.ar',
 			'Accept': 'application/json',
 		},
 		mode: 'cors'
