@@ -305,7 +305,7 @@ function buslocation(clickedOption, busName) {
 			'Accept': 'application/json',
 			'Content-type': 'application/json',
 		},
-		mode: 'cors'
+		mode: 'no-cors'
 	})
 	.then(function(response) { return response.json(); })
 	.then(function(json) {
