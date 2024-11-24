@@ -35,16 +35,21 @@ var objParadas; // to be any /assets/json/X.json
 
 // fetch gruposLineas.json
 async function fetchgrupoLineas() {
-	fetch('assets/json/gruposLineas.json', { 
-		method: 'GET'
-	})
-	.then(function(response) { return response.json(); })
-	.then(function(json) {
-		// already parsed, no need for JSON.parse(json)
-		obj = json;
-		// call dropdown function
-		dropdownLineas();
+	const response = await fetch('assets/json/gruposLineas.json', { 
+		method: 'GET',
+		header: {
+			'Allow-Access-Control-Origin': '*',
+			'Access-Control-Allow-Methods': 'GET, PUT, POST',
+			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+			'Accept': 'application/json',
+			'Content-type': 'application/json',
+		},
+		mode: 'cors'
 	});
+    obj = await response.json();
+    console.log(obj);
+    // call dropdown function
+		dropdownLineas();
 }
 
 fetchgrupoLineas();
@@ -125,7 +130,8 @@ function poverlay(clickedOption) {
 	console.log("clicked option poverlay: ", clickedOption);
 	// fetch the gruposLineas.json
 	fetch('assets/json/' + clickedOption + '.json', { 
-		method: 'GET'
+		method: 'GET',
+		mode: 'cors'
 	})
 	.then(function(response) { return response.json(); })
 	.then(function(json) {
@@ -292,7 +298,14 @@ function buslocation(clickedOption, busName) {
 	// retrieve current location
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
-		mode: 'no-cors'
+		header: {
+			'Allow-Access-Control-Origin': '*',
+			'Access-Control-Allow-Methods': 'GET, PUT, POST',
+			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+			'Accept': 'application/json',
+			'Content-type': 'application/json',
+		},
+		mode: 'cors'
 	})
 	.then(function(response) { return response.json(); })
 	.then(function(json) {
