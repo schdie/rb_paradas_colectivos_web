@@ -38,11 +38,8 @@ async function fetchgrupoLineas() {
 	const response = await fetch('assets/json/gruposLineas.json', { 
 		method: 'GET',
 		header: {
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'GET, PUT, POST',
-			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+			'Origin': 'https://rbt.0x2f.dev',
 			'Accept': 'application/json',
-			'Content-type': 'application/json',
 		},
 		mode: 'cors'
 	});
@@ -172,6 +169,7 @@ const items = []; // array used for the polyline
 
 // get the selected bus stops
 function paradas () {
+	let ranColor = "#000000";
 	if (checkboxLimp.checked === true) { // only if the checkbox is selected
 		// clear all the 'paradas' markers
 		layerParadas.clearLayers();
@@ -204,8 +202,16 @@ function paradas () {
 		// send items to array
 		items.push([lattemp, lngtemp]);
 	}
+	//
+	ranColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	//console.log("paradas ranColor: ", ranColor);
+	//console.log("paradas ranColor length: ", ranColor.length);
+	if (ranColor.length < 7) {
+		//console.log("random color was not 6 digits");
+		ranColor = "#773322";
+	}
 	// add the polyline to the its own layer on the map
-	polyline = L.polyline(items, {color: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+	polyline = L.polyline(items, {color: ranColor,
 																weight: 7,
 																opacity: 1,
 																smoothFactor: 1}).bindPopup(selectElement.options[selectElement.selectedIndex].text).addTo(layerPath);
@@ -310,11 +316,8 @@ function buslocation(clickedOption, busName) {
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'GET, PUT, POST',
-			'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+			'Origin': 'https://rbt.0x2f.dev',
 			'Accept': 'application/json',
-			'Content-type': 'application/json',
 		},
 		mode: 'cors'
 	})
