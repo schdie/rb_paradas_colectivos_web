@@ -292,7 +292,7 @@ function buslocation(clickedOption, busName) {
 	// retrieve current location
 	fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
-		mode: 'cors'
+		mode: 'no-cors'
 	})
 	.then(function(response) { return response.json(); })
 	.then(function(json) {
