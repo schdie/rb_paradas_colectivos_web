@@ -314,7 +314,7 @@ function buslocation(clickedOption, busName) {
 
 	// retrieve current location
 	//fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
-	fetch('https://cors-anywhere.herokuapp.com/https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
+	fetch('https://corsproxy.0x2f.dev/https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
 			'Origin': 'https://tucuman.miredbus.com.ar',
