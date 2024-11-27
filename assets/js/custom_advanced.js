@@ -1,3 +1,6 @@
+// say hi!
+console.log("rbt v5 startup!");
+
 // set default to San Miguel de Tucuman
 const map = L.map('map').setView([-26.8083, -65.2176], 13);
 
@@ -19,12 +22,6 @@ function onLocationFound(e) {
 }
 
 map.on('locationfound', onLocationFound);
-
-function onLocationError(e) {
-    alert(e.message);
-}
-
-map.on('locationerror', onLocationError);
 
 // here there should be an error handle but it's better no to have it really
 
