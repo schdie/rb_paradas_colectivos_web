@@ -20,6 +20,12 @@ function onLocationFound(e) {
 
 map.on('locationfound', onLocationFound);
 
+function onLocationError(e) {
+    alert(e.message);
+}
+
+map.on('locationerror', onLocationError);
+
 // here there should be an error handle but it's better no to have it really
 
 // red bus json
@@ -30,8 +36,11 @@ map.on('locationfound', onLocationFound);
 var selectElement = document.getElementById('sel'); // select element on webpage
 var checkboxRutas = document.getElementById('chkrut'); // checkbox for showing all routes on webpage
 var checkboxLimp = document.getElementById('chklimp'); // checkbox cleanup everything on webpage
+var checkboxRealtime = document.getElementById('chkrealtime'); // checkbox for updating in real time the buses locations
+var checkboxAllBuses = document.getElementById('chkallbuses'); // checkbox to show all the buses at the same time
 var obj; // the json gruposLineas.json
 var objParadas; // to be any /assets/json/X.json
+var corsProxy = "https://corsproxy.0x2f.dev/?";
 
 // fetch gruposLineas.json
 async function fetchgrupoLineas() {
@@ -44,7 +53,7 @@ async function fetchgrupoLineas() {
 		mode: 'cors'
 	});
     obj = await response.json();
-    console.log(obj);
+    //console.log(obj);
     // call dropdown function
 		dropdownLineas();
 }
@@ -102,13 +111,15 @@ async function dropdownLineas() {
 // global scope
 var lastclicked;
 var busloopId;
+var busName;
 
 // on user selection get the selected value and display the bus stops
 selectElement.addEventListener("change", function(event){
 	let clickedOption = selectElement.value;
-	let busName = selectElement.options[selectElement.selectedIndex].text;
-	console.log("selectElement: ", selectElement.options[selectElement.selectedIndex].text);
+	busName = selectElement.options[selectElement.selectedIndex].text;
+	//console.log("selectElement: ", selectElement.options[selectElement.selectedIndex].text);
 	checkboxRutas.checked = false; // set the checkbox for all the routes off
+	checkboxAllBuses.checked = false; // set the checkbox to show all the buses off
 	// only look for stops and buses
 	if (clickedOption !== "0") {
 		if (lastclicked !== clickedOption) {
@@ -124,7 +135,7 @@ selectElement.addEventListener("change", function(event){
 });
 
 function poverlay(clickedOption) {
-	console.log("clicked option poverlay: ", clickedOption);
+	//console.log("clicked option poverlay: ", clickedOption);
 	// fetch the gruposLineas.json
 	fetch('assets/json/' + clickedOption + '.json', { 
 		method: 'GET',
@@ -134,7 +145,7 @@ function poverlay(clickedOption) {
 	.then(function(json) {
 		// already parsed, no need for JSON.parse(json)
 		objParadas = json;
-		console.log("paradas fetch json: ", objParadas);
+		//console.log("paradas fetch json: ", objParadas);
 		// call paradas
 		paradas();
 	});
@@ -164,6 +175,7 @@ var layerParadas = L.layerGroup().addTo(map); // polyline layer for the bus stop
 var layerPath = L.layerGroup().addTo(map); // polyline layer for the indidual routes
 var layerBuses = L.layerGroup().addTo(map); // polyline layer for the buses
 var layerAllRoutes = L.featureGroup();
+var layerAllBuses = L.featureGroup();
 var polyline;
 const items = []; // array used for the polyline
 
@@ -179,6 +191,8 @@ function paradas () {
 		layerBuses.clearLayers();
 		// remove layerAllRoutes
 		layerAllRoutes.remove();
+		// remove layerAllbuses
+		layerAllBuses.remove();
 	}
 	
 	// show the layergroup choosen
@@ -263,39 +277,122 @@ function retrieveAllRoutes () {
 			let linecolor = 'rgb(' + r +', ' + z +', 100)';
 			// add the polyline to the its own layer on the map
 			polyline = L.polyline(items, {color: linecolor,
-																		weight: 5,
-																		opacity: 0.7,
+																		//fillColor: 'black',
+																		//dashArray: '9',
+																		weight: 7,
+																		opacity: 0.9,
+																		//fillOpacity: 0.9,
 																		smoothFactor: 1}).bindPopup(selectElement.options[i].text).addTo(layerAllRoutes);	
 			// clear the array
 			items.length = 0;
-			// fit to current path
-			map.fitBounds(polyline.getBounds());
+			// fit to current path but only when we are in the last element
+			if (i === selectElement.length - 1) {
+				map.fitBounds(polyline.getBounds());
+			}
 		});
 	}
+	// finally we add the layer to the map
 	layerAllRoutes.addTo(map);
 }
 
-// show all routes at the same time
+// shows all the possible routes at the same time
+function retrieveAllBuses () {
+	Array.from(selectElement.options).forEach(function(value) {
+		// get each the current buses from each available line
+		//fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + value.value, {
+		fetch(corsProxy + 'https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + value.value, {
+			method: 'GET',
+			header: {
+				'Origin': 'https://tucuman.miredbus.com.ar',
+				'Accept': 'application/json',
+			},
+			mode: 'cors'
+		})
+		.then(function(response) { return response.json(); })
+		.then(function(json) {
+			// already parsed, no need for JSON.parse(json)
+			objBusLoc = json;
+			
+			// display the location of all the buses
+			for (var key in Object.values(objBusLoc.posiciones)) {
+				let latLng = L.latLng([Object.values(objBusLoc.posiciones[key])[1], Object.values(objBusLoc.posiciones[key])[2]]);
+				L.marker(latLng, {icon: busIcon, zIndexOffset: 9999}).addTo(layerAllBuses).bindPopup("Colectivo: " + busName + "<br> Interno: " + Object.values(objBusLoc.posiciones[key])[0] + "<br> Próxima parada: " + Object.values(objBusLoc.posiciones[key])[4]);
+				// add bus direction
+				L.marker(latLng, {rotationAngle: Object.values(objBusLoc.posiciones[key])[3], rotationOrigin: "center", icon: directionIcon, zIndexOffset: 9998}).addTo(layerAllBuses);
+			}
+		});
+	//console.log("Retrieving all buses location index: ", value.value);
+	});
+	// finally we add the layer to the map
+	layerAllBuses.addTo(map);
+}
+
+// CHECKBOX: update the buses locations in real time
+checkboxRealtime.addEventListener("click", function(event){
+	if (checkboxRealtime.checked === true) {
+		// refresh the buses if already selected
+		if (lastclicked && lastclicked != 0) {
+			buslocation(lastclicked, busName);
+			//console.log("buslocation(lastclicked) ", lastclicked);
+			//console.log("buslocation(busName) ", busName);
+		}
+	} else {
+		// clear loop
+		clearTimeout(busloopId);
+		console.log("Real time update stopped.");
+	}
+});
+
+// CHECKBOX: show all routes at the same time
 checkboxRutas.addEventListener("click", function(event){
 	if (checkboxRutas.checked === true) {
-		// cleanup
+		// layers cleanup
 		layerParadas.clearLayers();
 		layerPath.clearLayers();
 		layerBuses.clearLayers();
 		layerAllRoutes.remove();
+		// clear busloopId just in case
+		clearTimeout(busloopId);
 		// call our function if we didn't already
 		if (layerAllRoutes.getLayers().length === 0) {
 			retrieveAllRoutes();
 		} else {
 			layerAllRoutes.addTo(map);
 		}
-		//retrieveAllRoutes();
 	} else {
-		// cleanup
+		// layers cleanup
 		layerParadas.clearLayers();
 		layerPath.clearLayers();
 		layerBuses.clearLayers();
 		layerAllRoutes.remove();
+		// clear busloopId just in case
+		clearTimeout(busloopId);
+	}
+});
+
+// CHECKBOX: show all buses at the same time
+checkboxAllBuses.addEventListener("click", function(event){
+	if (checkboxAllBuses.checked === true) {
+		// layers cleanup
+		layerParadas.clearLayers();
+		layerPath.clearLayers();
+		layerBuses.clearLayers();
+		layerAllBuses.remove();
+		// clear busloopId just in case
+		clearTimeout(busloopId);
+		if (layerAllBuses.getLayers().length === 0) {
+			retrieveAllBuses();
+		} else {
+			layerAllBuses.addTo(map);
+		}
+	} else {
+		// layers cleanup
+		layerParadas.clearLayers();
+		layerPath.clearLayers();
+		layerBuses.clearLayers();
+		layerAllBuses.remove();
+		// clear busloopId just in case
+		clearTimeout(busloopId);		
 	}
 });
 
@@ -304,17 +401,17 @@ function buslocation(clickedOption, busName) {
 	// clear loop
 	clearTimeout(busloopId);
 		
-	if (checkboxLimp.checked === true) { // only if the checkbox is selected
-		layerParadas.clearLayers();
-		console.log("inside checboxlimp so should be true!");
+	// clear the paradas layer but only if the checkbox is selected
+	if (checkboxLimp.checked === true) {
+		//layerParadas.clearLayers();
 	}
 	
 	let cbus = clickedOption;
-	console.log("hi! buses locations");
+	let bNam = busName;
 
 	// retrieve current location
 	//fetch('https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
-	fetch('https://corsproxy.0x2f.dev/?https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
+	fetch(corsProxy + 'https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
 			'Origin': 'https://tucuman.miredbus.com.ar',
@@ -327,9 +424,10 @@ function buslocation(clickedOption, busName) {
 		// already parsed, no need for JSON.parse(json)
 		objBusLoc = json;
 
-		// clean the layer before displaying it again 
-		// better no for advanced
-		//layerBuses.clearLayers();
+		// clean the layer before displaying it again but only if real updates is enabled
+		if (checkboxRealtime.checked === true) {
+			layerBuses.clearLayers();
+		}
 		
 		// display the location of all the buses
 		for (var key in Object.values(objBusLoc.posiciones)) {
@@ -345,5 +443,9 @@ function buslocation(clickedOption, busName) {
 			L.marker(latLng, {rotationAngle: Object.values(objBusLoc.posiciones[key])[3], rotationOrigin: "center", icon: directionIcon, zIndexOffset: 9998}).addTo(layerBuses);
 		}
 	});
-//busloopId = setTimeout( () => {buslocation(cbus);}, 15000); // 15 secs is enough, lets be nice --- NO UPDATES
+	// update location only if the checkbox is selected
+	if (checkboxRealtime.checked === true) {
+		busloopId = setTimeout( () => {buslocation(cbus, bNam);}, 15000); // 15 secs is enough
+		console.log("Real time update complete.");
+	}
 }
