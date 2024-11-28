@@ -411,7 +411,7 @@ function buslocation(clickedOption, busName) {
 	fetch(corsProxy + 'https://tucuman.miredbus.com.ar/rest/posicionesBuses/' + clickedOption, {
 		method: 'GET',
 		header: {
-			'Origin': 'https://tucuman.miredbus.com.ar',
+			'Origin': 'https://rbt.0x2f.dev',
 			'Accept': 'application/json',
 		},
 		mode: 'cors'
