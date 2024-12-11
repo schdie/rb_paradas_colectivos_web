@@ -154,7 +154,7 @@ function paradas () {
 		// clear the current bus path
 		layerPath.clearLayers();
 		// clear buses locations
-		layerBuses.clearLayers();
+		//layerBuses.clearLayers();
 		// remove layerAllRoutes
 		layerAllRoutes.remove();
 		// remove layerAllbuses
@@ -293,14 +293,9 @@ function retrieveAllBuses () {
 
 // try to get the current position of the buses for a specific line number
 function buslocation(clickedOption, busName) {
-	// clear loop
-	clearTimeout(busloopId);
-		
-	// clear the paradas layer but only if the checkbox is selected
-	if (checkboxLimp.checked === true) {
-		//layerParadas.clearLayers();
-	}
-	
+	clearTimeout(busloopId); // clear loop
+	layerBuses.clearLayers(); // clear bus layer
+
 	let cbus = clickedOption;
 	let bNam = busName;
 
@@ -317,11 +312,6 @@ function buslocation(clickedOption, busName) {
 	.then(function(json) {
 		// already parsed, no need for JSON.parse(json)
 		objBusLoc = json;
-
-		// clean the layer before displaying it again but only if real updates is enabled
-		if (checkboxRealtime.checked === true) {
-			layerBuses.clearLayers();
-		}
 		
 		// display the location of all the buses
 		for (var key in Object.values(objBusLoc.posiciones)) {
