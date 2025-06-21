@@ -46,7 +46,7 @@ fetchgrupoLineas();
 // populate our select object
 async function dropdownLineas() {
 	// urbanos
-	const urbanos = obj.grupos.subGrupos[0].subGrupos;
+	//const urbanos = obj.grupos.subGrupos[0].subGrupos;
 	//console.log(obj.grupos.subGrupos[0].subGrupos);
 	//console.log(urbanos.length);
 
@@ -60,7 +60,7 @@ async function dropdownLineas() {
 	//console.log(obj.grupos.subGrupos[2].lineas);
 	//console.log(rurales.length);
 
-
+/*
 	for (var key in Object.values(urbanos)) {
 		//console.log("codLinea: ", Object.values(urbanos[key])[2]);
 		//console.log("codLinea: ", Object.values(urbanos[key])[2][0]);
@@ -75,6 +75,7 @@ async function dropdownLineas() {
 		//sel.appendChild(new Option(Object.values(rurales[key])[1], Object.values(rurales[key])[0])).cloneNode(true);
 		//sel.appendChild(new Option(Object.values(rurales[key])[1], Object.values(rurales[key])[0])).cloneNode(true);
 	}
+*/
 
 	for (var key in Object.values(interurbanos)) {
 		for (var yek in Object.values(interurbanos[key])[2]) {
