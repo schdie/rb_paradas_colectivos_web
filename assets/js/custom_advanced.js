@@ -68,9 +68,9 @@ async function dropdownLineas() {
 	// urbanos
 	//const urbanos = obj.grupos.subGrupos[0].subGrupos;
 	// interurbanos
-	const interurbanos = obj.grupos.subGrupos[1].subGrupos;
+	const interurbanos = obj.grupos.subGrupos[0].subGrupos;
 	// rurales
-	const rurales = obj.grupos.subGrupos[2].lineas;
+	const rurales = obj.grupos.subGrupos[1].lineas;
 
 /*
 	for (var key in Object.values(urbanos)) { // urbanos loop
