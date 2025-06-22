@@ -69,6 +69,8 @@ async function dropdownLineas() {
 	//const urbanos = obj.grupos.subGrupos[0].subGrupos;
 	// interurbanos
 	const interurbanos = obj.grupos.subGrupos[0].subGrupos;
+	console.log(obj.grupos.subGrupos[0].subGrupos);
+	console.log(interurbanos.length);
 	// rurales
 	const rurales = obj.grupos.subGrupos[1].lineas;
 
@@ -81,8 +83,12 @@ async function dropdownLineas() {
 */
 
 	for (var key in Object.values(interurbanos)) { // interurbanos loop
-		for (var yek in Object.values(interurbanos[key])[2]) {
-			sel.appendChild(new Option(Object.values(interurbanos[key])[2][yek].descripcion, Object.values(interurbanos[key])[2][yek].codLinea)).cloneNode(true);
+		//console.log("codLinea: ", Object.values(interurbanos[key])[1]);
+		//console.log("codLinea: ", Object.values(interurbanos[key])[1][0]);
+		for (var yek in Object.values(interurbanos[key])[1]) {
+			//console.log("interurbanos inception: ", Object.values(interurbanos[key])[1][yek].codLinea);
+			//console.log("interurbanos inception: ", Object.values(interurbanos[key])[1][yek].descripcion);
+			sel.appendChild(new Option(Object.values(interurbanos[key])[1][yek].descripcion, Object.values(interurbanos[key])[1][yek].codLinea)).cloneNode(true);
 		}
 	}
 
