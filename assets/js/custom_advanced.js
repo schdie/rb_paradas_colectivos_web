@@ -1,5 +1,5 @@
 // not really necesary but useful to avoid cached versions when combined with changes in the index.html file
-console.log("rbt v9 startup!");
+console.log("rbt v11 startup!");
 
 // set the map to San Miguel de Tucuman
 const map = L.map('map').setView([-26.8083, -65.2176], 13);
